@@ -6,20 +6,28 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Grabber {
 
-    public DcMotor roller = null;
+    public DcMotor roller;
+    private static final double INTAKE_SPEED = 1;
+    private static final double OUTAKE_SPEED = -1;
 
     public Grabber(HardwareMap hardwareMap){
-        roller  = hardwareMap.get(DcMotor.class, "left_drive");
+        roller = hardwareMap.get(DcMotor.class, "left_drive");
 
         roller.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    public void spin(double speed) {
+    private void spin(double speed) {
 
-        leftPower = Range.clip(forwards + turn, -1.0, 1.0) ;
-        rightPower = Range.clip(forwards - turn, -1.0, 1.0) ;
+        double rollerPower = Range.clip(speed, -1.0, 1.0);
 
-        leftDrive.setPower(leftPower);
-        rightDrive.setPower(right);
+        roller.setPower(rollerPower);
+    }
+
+    public void intake() {
+        spin(INTAKE_SPEED);
+    }
+
+    public void outake() {
+        spin(OUTAKE_SPEED);
     }
 }

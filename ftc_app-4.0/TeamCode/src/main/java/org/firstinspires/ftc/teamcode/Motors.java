@@ -21,10 +21,10 @@ public class Motors {
         double leftPower;
         double rightPower;
 
-        leftPower = Range.clip(forwards + turn, -1.0, 1.0) ;
-        rightPower = Range.clip(forwards - turn, -1.0, 1.0) ;
+        leftPower = Range.clip(forwards + turn, -1.0, 1.0);
+        rightPower = Range.clip(forwards - turn, -1.0, 1.0);
 
         leftDrive.setPower(leftPower);
-        rightDrive.setPower(right);
+        rightDrive.setPower(rightPower);
     }
 }
