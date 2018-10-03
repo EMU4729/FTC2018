@@ -25,6 +25,6 @@ public class Motors {
         rightPower = Range.clip(forwards - turn, -1.0, 1.0) ;
 
         leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower);
+        rightDrive.setPower(right);
     }
 }
