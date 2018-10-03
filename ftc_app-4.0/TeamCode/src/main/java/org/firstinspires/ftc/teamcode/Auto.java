@@ -31,10 +31,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -50,22 +49,21 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
+@Autonomous(name="Auto", group="Iterative Opmode")
 @Disabled
 public class DriveCode extends OpMode
 {
-    Motors motors;
-    // Declare OpMode members.
+    private Motors motors;
+    private Tracking tracking;
     private ElapsedTime runtime = new ElapsedTime();
-//    private DcMotor leftDrive = null;
-//    private DcMotor rightDrive = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Tele ready");
+        telemetry.addData("Status", "Auto ready");
+        tracking.init();
     }
 
     /*
@@ -85,21 +83,11 @@ public class DriveCode extends OpMode
     //Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-        double drive = -gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
-
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-
-        motors.arcadeDrive(drive, turn);
+        tracking.run();
+        telemetry.addData("X", tracking.x);
+        telemetry.addData("Y", tracking.y);
+        telemetry.addData("Z", tracking.z);
+        telemetry.addData("Rotation", tracking.rotation);
     }
 
     // Code to run ONCE after the driver hits STOP
@@ -107,5 +95,4 @@ public class DriveCode extends OpMode
     public void stop() {
         motors.arcadeDrive(0,0);
     }
-
 }
