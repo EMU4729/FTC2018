@@ -34,6 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import Motors.java;
+import Tracking.java;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -63,7 +65,9 @@ public class Auto extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Auto ready");
+        tracking = new Tracking();
         tracking.init();
+        motors = new Motors();
     }
 
     /*
@@ -88,7 +92,38 @@ public class Auto extends OpMode
         telemetry.addData("Y", tracking.y);
         telemetry.addData("Z", tracking.z);
         telemetry.addData("Rotation", tracking.rotation);
+    if (tracking.x > 0 && tracking.x < 230) { // 0 if far left of wall, 225 is half of robot size
+        if (tracking.rotation < 179 || tracking.rotation > 181) { // Face downwards with a 1 degree threshold
+            turnLeft();
+        } else {
+            if (tracking)
+        }
+    } else { // Starting Position
+        if (tracking.rotation < 269 || tracking.rotation > 271) {
+            turnLeft();
+        } else {
+            forward();
+        }
     }
+    }
+
+    private void forward() {
+        motors.arcadeDrive(1, 0);
+    }
+
+    private void turnLeft() {
+        motors.arcadeDrive(0, -1)
+    }
+
+    private void turnRight() {
+        motors.arcadeDrive(0, 1)
+    }
+
+    private void stopMotors() {
+        motors.arcadeDrive(0, 0)
+    }
+
+    private void turn
 
     // Code to run ONCE after the driver hits STOP
     @Override
