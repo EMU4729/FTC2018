@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -54,7 +53,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Auto extends OpMode
 {
     private Motors motors;
-    private Tracking tracking;
+    private VuforiaTracking vuforiaTracking;
     private ElapsedTime runtime = new ElapsedTime();
 
     /*
@@ -63,7 +62,7 @@ public class Auto extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Auto ready");
-        tracking.init();
+        vuforiaTracking.init();
     }
 
     /*
@@ -83,11 +82,11 @@ public class Auto extends OpMode
     //Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
-        tracking.run();
-        telemetry.addData("X", tracking.x);
-        telemetry.addData("Y", tracking.y);
-        telemetry.addData("Z", tracking.z);
-        telemetry.addData("Rotation", tracking.rotation);
+        vuforiaTracking.run();
+        telemetry.addData("X", vuforiaTracking.x);
+        telemetry.addData("Y", vuforiaTracking.y);
+        telemetry.addData("Z", vuforiaTracking.z);
+        telemetry.addData("Rotation", vuforiaTracking.rotation);
     }
 
     // Code to run ONCE after the driver hits STOP
