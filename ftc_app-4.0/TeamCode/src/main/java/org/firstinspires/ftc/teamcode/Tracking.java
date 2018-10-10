@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -29,6 +33,8 @@ public class Tracking {
     public double rotation;
 
     private HardwareMap hardwareMap;
+    private SensorManager sensorManager;
+    private Sensor gyroscope;
 
     private static final String VUFORIA_KEY = "ARKIRg7/////AAAAGQU31t4eREUutEXqid10CmISe2JaYj59any+VkpRNVDhEWqhqx24jAo1sGqISNJQ+DWoxr8B/GduQTg7NTispAEJR+R/ltkkGkYNJqSLJb4S51xBprMyZ7f5IiwFs/c/AYaphIQb0UoCVK6AIpv69VsDIwCeIaZCUQB4XEY/tdkQh5CDRZxNoP+TAYfv7EbeAGmZsdqFg5DciG2U6cwRD+0gkUzmeYSkGd4/FXqVxicAYL0zRryzoVlOIBLLRF6pxgMScC6n1/OoMjBYrMcM2yKwJhvTvD/nlUwCe7acRA/hXMsvhNZMls8ZDokSuHKISudTQ5bEH6c+q+GsH7NwoUsYgASQ+6aXlL9IRWpcYd7u\n";
 
@@ -63,6 +69,8 @@ public class Tracking {
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_DEVICE);
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
