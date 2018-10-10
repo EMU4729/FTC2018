@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -26,6 +28,8 @@ public class Tracking {
     public double z;
     public double rotation;
 
+    private HardwareMap hardwareMap;
+
     private static final String VUFORIA_KEY = "ARKIRg7/////AAAAGQU31t4eREUutEXqid10CmISe2JaYj59any+VkpRNVDhEWqhqx24jAo1sGqISNJQ+DWoxr8B/GduQTg7NTispAEJR+R/ltkkGkYNJqSLJb4S51xBprMyZ7f5IiwFs/c/AYaphIQb0UoCVK6AIpv69VsDIwCeIaZCUQB4XEY/tdkQh5CDRZxNoP+TAYfv7EbeAGmZsdqFg5DciG2U6cwRD+0gkUzmeYSkGd4/FXqVxicAYL0zRryzoVlOIBLLRF6pxgMScC6n1/OoMjBYrMcM2yKwJhvTvD/nlUwCe7acRA/hXMsvhNZMls8ZDokSuHKISudTQ5bEH6c+q+GsH7NwoUsYgASQ+6aXlL9IRWpcYd7u\n";
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
@@ -41,11 +45,17 @@ public class Tracking {
     private OpenGLMatrix lastLocation = null;
     private boolean targetVisible = false;
 
+    private List<VuforiaTrackable> allTrackables;
+
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
      */
-    VuforiaLocalizer vuforia;
+    private VuforiaLocalizer vuforia;
+
+    public Tracking(HardwareMap hardwareMap) {
+        this.hardwareMap = hardwareMap;
+    }
 
     public void init() {
         /*
@@ -77,7 +87,7 @@ public class Tracking {
         backSpace.setName("Back-Space");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        List<VuforiaTrackable> allTrackables = new ArrayList<>();
+        allTrackables = new ArrayList<>();
         allTrackables.addAll(targetsRoverRuckus);
 
         /**
