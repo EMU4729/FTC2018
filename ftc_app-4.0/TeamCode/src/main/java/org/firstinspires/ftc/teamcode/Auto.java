@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Auto", group="Iterative Opmode")
 @Disabled
-public class DriveCode extends OpMode
+public class Auto extends OpMode
 {
     private Motors motors;
     private Tracking tracking;
