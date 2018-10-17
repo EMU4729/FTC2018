@@ -37,20 +37,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import Motors.java;
 import Tracking.java;
 
-/**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
 @Autonomous(name="Auto", group="Iterative Opmode")
 @Disabled
 public class Auto extends OpMode
@@ -58,6 +44,8 @@ public class Auto extends OpMode
     private Motors motors;
     private Tracking tracking;
     private ElapsedTime runtime = new ElapsedTime();
+    private static final double ROBOT_FIELD = 358.14; //cm
+    private static final double ROBOT_FIELD_HALF = 179.07; //cm
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -92,19 +80,31 @@ public class Auto extends OpMode
         telemetry.addData("Y", tracking.y);
         telemetry.addData("Z", tracking.z);
         telemetry.addData("Rotation", tracking.rotation);
-    if (tracking.x > 0 && tracking.x < 230) { // 0 if far left of wall, 225 is half of robot size
-        if (tracking.rotation < 179 || tracking.rotation > 181) { // Face downwards with a 1 degree threshold
-            turnLeft();
+
+        //release from wall
+
+        //go to box
+        if (tracking.vision) {
+            //rotate depending on side of field - hope this is correct code
+            if (tracking.x < ROBOT_FIELD_HALF) { //blue side
+                if (tracking.rotation < 90) {
+                    turnRight();
+                } else if (tracking.rotation < -90) {
+                    turnLeft();
+                }
+            } else if (tracking.x > ROBOT_FIELD_HALF) { //red side
+                if (tracking.rotation < -90) {
+                    turnRight();
+                } else if (tracking.rotation < 90) {
+                    turnLeft();
+                }
+            }
+            stop();
+            //go forward now
+            while (tracking.x )
         } else {
-            if (tracking)
+            stop();
         }
-    } else { // Starting Position
-        if (tracking.rotation < 269 || tracking.rotation > 271) {
-            turnLeft();
-        } else {
-            forward();
-        }
-    }
     }
 
     private void forward() {
@@ -112,18 +112,16 @@ public class Auto extends OpMode
     }
 
     private void turnLeft() {
-        motors.arcadeDrive(0, -1)
+        motors.arcadeDrive(0, -1);
     }
 
     private void turnRight() {
-        motors.arcadeDrive(0, 1)
+        motors.arcadeDrive(0, 1);
     }
 
     private void stopMotors() {
-        motors.arcadeDrive(0, 0)
+        motors.arcadeDrive(0, 0);
     }
-
-    private void turn
 
     // Code to run ONCE after the driver hits STOP
     @Override
