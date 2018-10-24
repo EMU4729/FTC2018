@@ -46,6 +46,16 @@ public class Auto extends OpMode
     private static final double ROBOT_FIELD = 358.14; //cm
     private static final double ROBOT_FIELD_HALF = 179.07; //cm
 
+    private const double[][] blueTop = [[], []];
+    private const double[][] blueBottom = [[], []];
+    private const double[][] redTop = [[], []];
+    private const double[][] redBottom = [[], []];
+    private double[][] actualPosition;
+
+    private double autoStage = 0;
+
+    private const double distanceThreshold = 100; //mm
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -56,6 +66,7 @@ public class Auto extends OpMode
         tracking.init();
         motors = new Motors();
         autoNavigation = new AutoNavigation();
+        actualPosition = blueTop;
     }
 
     /*
@@ -70,6 +81,8 @@ public class Auto extends OpMode
     @Override
     public void start() {
         runtime.reset();
+
+        release(); //release from wall
     }
 
     //Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -81,12 +94,19 @@ public class Auto extends OpMode
         telemetry.addData("Z", tracking.z);
         telemetry.addData("Rotation", tracking.rotation);
 
-        //release from wall
-        release();
-
         //go to box
         if (tracking.available) {
-            autoNavigation.navigate();
+            if (autoStage < actualPosition.length) {
+                double[] output = autoNavigation.navigate(actualPosition[autoStage][0], actualPosition[autoStage][1]);
+                double power = output[0];
+                double turn = output[1];
+
+                motors.arcadeDrive(power, turn);
+                if (autoNavigation.getDistance < distanceThreshold) {
+                    stop();
+                    autoStage += 1;
+                }
+            }
         } else {
             stop();
         }
