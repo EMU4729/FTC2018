@@ -92,21 +92,26 @@ public class Auto extends OpMode
             }
             //rotate depending on side of field
             if (tracking.x < ROBOT_FIELD_HALF) { //blue side
-                if (tracking.rotation < 90) {
+                while (tracking.rotation < 90) {
                     turnRight();
-                } else if (tracking.rotation < -90) {
+                }
+                while (tracking.rotation < -90) {
                     turnLeft();
                 }
             } else if (tracking.x > ROBOT_FIELD_HALF) { //red side
-                if (tracking.rotation < -90) {
+                while (tracking.rotation < -90) {
                     turnRight();
-                } else if (tracking.rotation < 90) {
+                }
+                while (tracking.rotation < 90) {
                     turnLeft();
                 }
             }
             stop();
             //go forward to box
-            forward();
+            while (tracking.y == ROBOT_FIELD_HALF-5) {
+                forward();
+            }
+            stop();
         } else {
             stop();
         }
