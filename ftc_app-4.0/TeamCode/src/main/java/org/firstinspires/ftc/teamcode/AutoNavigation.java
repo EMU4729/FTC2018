@@ -38,7 +38,7 @@ public class AutoNavigation {
     }
 
     public void run() {
-        tracking.run()
+        tracking.run();
     }
 
     public double[] navigate(double x, double y) {
