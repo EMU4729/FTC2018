@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import android.content.Context;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -25,16 +27,20 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tracking {
-    public boolean available;
-    public double x;
-    public double y;
-    public double z;
+public class Tracking implements SensorEventListener {
+    public boolean vision;
+    public double x, y, z;
     public double rotation;
+
+    private double ax, ay, az;
+    private double vx, vy, vz;
+    private double vrotation;
+    private long lastRun;
 
     private HardwareMap hardwareMap;
     private SensorManager sensorManager;
     private Sensor gyroscope;
+    private Sensor accelerometer;
 
     private static final String VUFORIA_KEY = "ARKIRg7/////AAAAGQU31t4eREUutEXqid10CmISe2JaYj59any+VkpRNVDhEWqhqx24jAo1sGqISNJQ+DWoxr8B/GduQTg7NTispAEJR+R/ltkkGkYNJqSLJb4S51xBprMyZ7f5IiwFs/c/AYaphIQb0UoCVK6AIpv69VsDIwCeIaZCUQB4XEY/tdkQh5CDRZxNoP+TAYfv7EbeAGmZsdqFg5DciG2U6cwRD+0gkUzmeYSkGd4/FXqVxicAYL0zRryzoVlOIBLLRF6pxgMScC6n1/OoMjBYrMcM2yKwJhvTvD/nlUwCe7acRA/hXMsvhNZMls8ZDokSuHKISudTQ5bEH6c+q+GsH7NwoUsYgASQ+6aXlL9IRWpcYd7u\n";
 
@@ -69,8 +75,11 @@ public class Tracking {
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
+        lastRun = 0;
+
         sensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -206,6 +215,12 @@ public class Tracking {
     }
 
     public void run() {
+        double delta = 0;
+        if (lastRun != 0) {
+            delta = (System.currentTimeMillis() - lastRun) / 1000;
+        }
+        lastRun = System.currentTimeMillis();
+
         // check all the trackable target to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
@@ -224,7 +239,7 @@ public class Tracking {
 
         // Provide feedback as to where the robot is located (if we know).
         if (targetVisible) {
-            available = true;
+            vision = true;
             // express position (translation) of robot in inches.
             VectorF translation = lastLocation.getTranslation();
 //                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
@@ -235,11 +250,35 @@ public class Tracking {
 
             // express the rotation of the robot in degrees.
             Orientation rot = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-//                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            // telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
             rotation = rot.thirdAngle;
         } else {
-            available = false;
-//                telemetry.addData("Visible Target", "none");
+            vision = false;
+            // telemetry.addData("Visible Target", "none");
+            // Fall back to motion tracking
+
+            rotation += Math.toDegrees(vrotation * delta);
+            if (rotation > 360) {
+                rotation -= 360;
+            }
+
+            vx += ax * delta;
+            vy += ay * delta;
+            vz += az * delta;
+            x  += vx * delta * Math.cos(Math.toRadians(rotation)) - vy * delta * Math.sin(Math.toRadians(rotation));
+            y  += vy * delta * Math.cos(Math.toRadians(rotation)) + vx * delta * Math.cos(Math.toRadians(rotation));
+            z  += vz * delta;
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            ax = sensorEvent.values[0];
+            ay = sensorEvent.values[1];
+            az = sensorEvent.values[2];
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            vrotation = sensorEvent.values[2];
         }
     }
 }
