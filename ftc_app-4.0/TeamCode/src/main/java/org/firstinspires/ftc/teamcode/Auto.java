@@ -82,7 +82,7 @@ public class Auto extends OpMode
         telemetry.addData("Rotation", tracking.rotation);
 
         //release from wall
-        //should i create separate function
+        release();
 
         //go to box
         if (tracking.available) {
