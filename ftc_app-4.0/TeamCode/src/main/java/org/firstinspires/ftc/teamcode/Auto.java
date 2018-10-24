@@ -87,7 +87,7 @@ public class Auto extends OpMode
         //go to box
         if (tracking.available) {
             //go forward
-            if (ROBOT_FIELD_HALF-5 != tracking.x) {
+            if (ROBOT_FIELD_HALF-5 == tracking.x) {
                 forward();
             }
             //rotate depending on side of field
