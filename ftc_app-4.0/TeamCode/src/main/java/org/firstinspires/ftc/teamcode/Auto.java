@@ -34,8 +34,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import Motors.java;
-import Tracking.java;
 
 @Autonomous(name="Auto", group="Iterative Opmode")
 @Disabled
@@ -44,6 +42,7 @@ public class Auto extends OpMode
     private Motors motors;
     private Tracking tracking;
     private ElapsedTime runtime = new ElapsedTime();
+    private AutoNavigation autoNavigation;
     private static final double ROBOT_FIELD = 358.14; //cm
     private static final double ROBOT_FIELD_HALF = 179.07; //cm
 
@@ -56,6 +55,7 @@ public class Auto extends OpMode
         tracking = new Tracking();
         tracking.init();
         motors = new Motors();
+        autoNavigation = new AutoNavigation();
     }
 
     /*
@@ -86,32 +86,7 @@ public class Auto extends OpMode
 
         //go to box
         if (tracking.available) {
-            //go forward
-            if (ROBOT_FIELD_HALF-5 == tracking.x) {
-                forward();
-            }
-            //rotate depending on side of field
-            if (tracking.x < ROBOT_FIELD_HALF) { //blue side
-                while (tracking.rotation < 90) {
-                    turnRight();
-                }
-                while (tracking.rotation < -90) {
-                    turnLeft();
-                }
-            } else if (tracking.x > ROBOT_FIELD_HALF) { //red side
-                while (tracking.rotation < -90) {
-                    turnRight();
-                }
-                while (tracking.rotation < 90) {
-                    turnLeft();
-                }
-            }
-            stop();
-            //go forward to box
-            while (tracking.y == ROBOT_FIELD_HALF-5) {
-                forward();
-            }
-            stop();
+            autoNavigation.navigate();
         } else {
             stop();
         }

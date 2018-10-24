@@ -29,8 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import org.firstinspires.ftc.teamcode.Tracking;
-
 public class AutoNavigation {
     private Tracking tracking;
 
@@ -50,10 +48,7 @@ public class AutoNavigation {
         const double speedScalingThreshold = 1000;
         const double angleScalingThreshold = 45;
 
-        double xDistance = x-tracking.x;
-        double yDistance = y-tracking.y;
-
-        double distance = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+        double distance = getDistance(x, y);
         double angle = Math.toDegrees(Math.atan2(xDistance, yDistance));
 
         if (angleDifference(angle, tracking.angle) < 1) {
@@ -77,5 +72,14 @@ public class AutoNavigation {
         }
 
         return Math.abs(angle1-angle2):
+    }
+
+    public double getDistance(double x, double y) {
+        double xDistance = x-tracking.x;
+        double yDistance = y-tracking.y;
+
+        double distance = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+
+        return distance;
     }
 }
