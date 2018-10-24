@@ -82,26 +82,36 @@ public class Auto extends OpMode
         telemetry.addData("Rotation", tracking.rotation);
 
         //release from wall
+        release();
 
         //go to box
-        if (tracking.vision) {
-            //rotate depending on side of field - hope this is correct code
+        if (tracking.available) {
+            //go forward
+            if (ROBOT_FIELD_HALF-5 == tracking.x) {
+                forward();
+            }
+            //rotate depending on side of field
             if (tracking.x < ROBOT_FIELD_HALF) { //blue side
-                if (tracking.rotation < 90) {
+                while (tracking.rotation < 90) {
                     turnRight();
-                } else if (tracking.rotation < -90) {
+                }
+                while (tracking.rotation < -90) {
                     turnLeft();
                 }
             } else if (tracking.x > ROBOT_FIELD_HALF) { //red side
-                if (tracking.rotation < -90) {
+                while (tracking.rotation < -90) {
                     turnRight();
-                } else if (tracking.rotation < 90) {
+                }
+                while (tracking.rotation < 90) {
                     turnLeft();
                 }
             }
             stop();
-            //go forward now
-            while (tracking.x )
+            //go forward to box
+            while (tracking.y == ROBOT_FIELD_HALF-5) {
+                forward();
+            }
+            stop();
         } else {
             stop();
         }
