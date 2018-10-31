@@ -55,10 +55,16 @@ import com.qualcomm.robotcore.util.Range;
 public class DriveCode extends OpMode
 {
     Motors motors;
+    Tracking trackingTest;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 //    private DcMotor leftDrive = null;
 //    private DcMotor rightDrive = null;
+
+    public DriveCode() {
+        motors = new Motors(hardwareMap);
+        trackingTest = new Tracking(hardwareMap);
+    }
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -66,6 +72,7 @@ public class DriveCode extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Tele ready");
+        trackingTest.init();
     }
 
     /*
@@ -96,8 +103,10 @@ public class DriveCode extends OpMode
         // rightPower = -gamepad1.right_stick_y ;
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
+//        telemetry.addData("Status", "Run Time: " + runtime.toString());
         //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.addData("vision", trackingTest.vision);
+        telemetry.addData("x, y, z, rotation", "%.2f, %.2f, %.2f, %.2f", trackingTest.x, trackingTest.y, trackingTest.z);
 
         motors.arcadeDrive(drive, turn);
     }

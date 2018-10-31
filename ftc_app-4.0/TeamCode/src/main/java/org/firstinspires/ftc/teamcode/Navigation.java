@@ -29,11 +29,18 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 public class Navigation {
     private Tracking tracking;
+    private HardwareMap hardwareMap;
+
+    public Navigation(HardwareMap hardwareMap) {
+        this.hardwareMap = hardwareMap;
+    }
 
     public void init() {
-        tracking = new Tracking();
+        tracking = new Tracking(hardwareMap);
         tracking.init();
     }
 
@@ -46,10 +53,10 @@ public class Navigation {
         double turn = 0;
 
         final double speedScalingThreshold = 1000;
-        final double angleScalingThreshold = 45;
+        final double angleScalingThreshold = 10;
 
         double distance = getDistance(x, y);
-        double angle = Math.toDegrees(Math.atan2(xDistance, yDistance));
+        double angle = Math.toDegrees(Math.atan2(x, y));
 
         if (angleDifference(angle, tracking.rotation) < 1) {
             move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;
