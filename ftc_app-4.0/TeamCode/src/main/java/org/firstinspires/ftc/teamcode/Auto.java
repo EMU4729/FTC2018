@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Auto", group="Iterative Opmode")
@@ -42,14 +41,14 @@ public class Auto extends OpMode
     private Motors motors;
     private Tracking tracking;
     private ElapsedTime runtime = new ElapsedTime();
-    private AutoNavigation autoNavigation;
+    private Navigation navigation;
     private static final double ROBOT_FIELD = 358.14; //cm
     private static final double ROBOT_FIELD_HALF = 179.07; //cm
 
-    private const double[][] blueTop = [[], []];
-    private const double[][] blueBottom = [[], []];
-    private const double[][] redTop = [[], []];
-    private const double[][] redBottom = [[], []];
+    private final double[][] blueTop = [[], []];
+    private final double[][] blueBottom = [[], []];
+    private final double[][] redTop = [[], []];
+    private final double[][] redBottom = [[], []];
     private double[][] actualPosition;
 
     private double autoStage = 0;
@@ -65,7 +64,7 @@ public class Auto extends OpMode
         tracking = new Tracking();
         tracking.init();
         motors = new Motors();
-        autoNavigation = new AutoNavigation();
+        navigation = new Navigation();
         actualPosition = blueTop;
     }
 
@@ -97,12 +96,12 @@ public class Auto extends OpMode
         //go to box
         if (tracking.available) {
             if (autoStage < actualPosition.length) {
-                double[] output = autoNavigation.navigate(actualPosition[autoStage][0], actualPosition[autoStage][1]);
+                double[] output = navigation.navigate(actualPosition[autoStage][0], actualPosition[autoStage][1]);
                 double power = output[0];
                 double turn = output[1];
 
                 motors.arcadeDrive(power, turn);
-                if (autoNavigation.getDistance < distanceThreshold) {
+                if (navigation.getDistance < distanceThreshold) {
                     stop();
                     autoStage += 1;
                 }

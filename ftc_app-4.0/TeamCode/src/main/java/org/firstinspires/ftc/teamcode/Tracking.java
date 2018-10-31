@@ -237,6 +237,11 @@ public class Tracking implements SensorEventListener {
             }
         }
 
+        // Update velocity anyway
+        vx += ax * delta;
+        vy += ay * delta;
+        vz += az * delta;
+
         // Provide feedback as to where the robot is located (if we know).
         if (targetVisible) {
             vision = true;
@@ -262,9 +267,6 @@ public class Tracking implements SensorEventListener {
                 rotation -= 360;
             }
 
-            vx += ax * delta;
-            vy += ay * delta;
-            vz += az * delta;
             x  += vx * delta * Math.cos(Math.toRadians(rotation)) - vy * delta * Math.sin(Math.toRadians(rotation));
             y  += vy * delta * Math.cos(Math.toRadians(rotation)) + vx * delta * Math.cos(Math.toRadians(rotation));
             z  += vz * delta;
@@ -280,5 +282,10 @@ public class Tracking implements SensorEventListener {
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             vrotation = sensorEvent.values[2];
         }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+        // Nothing for now
     }
 }

@@ -29,7 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
-public class AutoNavigation {
+public class Navigation {
     private Tracking tracking;
 
     public void init() {
@@ -45,22 +45,23 @@ public class AutoNavigation {
         double move = 0;
         double turn = 0;
 
-        const double speedScalingThreshold = 1000;
-        const double angleScalingThreshold = 45;
+        final double speedScalingThreshold = 1000;
+        final double angleScalingThreshold = 45;
 
         double distance = getDistance(x, y);
         double angle = Math.toDegrees(Math.atan2(xDistance, yDistance));
 
-        if (angleDifference(angle, tracking.angle) < 1) {
-            move = Math.min(speedScalingThreshold, distance)/speedScalingThreshold;
-        } else if (angleDifference(angle, tracking.angle) < 45) {
-            move = Math.min(speedScalingThreshold, distance)/speedScalingThreshold;
-            turn = Math.min(angleScalingThreshold, angle)/angleScalingThreshold;
+        if (angleDifference(angle, tracking.rotation) < 1) {
+            move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;
+        } else if (angleDifference(angle, tracking.rotation) < 45) {
+            move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;
+            turn = Math.min(angleScalingThreshold, angle) / angleScalingThreshold;
         } else {
-            turn = Math.min(angleScalingThreshold, angle)/angleScalingThreshold;
+            turn = Math.min(angleScalingThreshold, angle) / angleScalingThreshold;
         }
 
-        return [move, turn];
+        double[] result = {move, turn};
+        return result;
     }
 
     public double angleDifference(double angle1, double angle2) {
@@ -71,12 +72,12 @@ public class AutoNavigation {
             angle2 -= 360;
         }
 
-        return Math.abs(angle1-angle2):
+        return Math.abs(angle1 - angle2);
     }
 
     public double getDistance(double x, double y) {
-        double xDistance = x-tracking.x;
-        double yDistance = y-tracking.y;
+        double xDistance = x - tracking.x;
+        double yDistance = y - tracking.y;
 
         double distance = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
 
