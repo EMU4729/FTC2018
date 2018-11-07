@@ -30,4 +30,8 @@ public class Grabber {
     public void outake() {
         spin(OUTAKE_SPEED);
     }
+
+    public void stopSpin() {
+        spin(0);
+    }
 }

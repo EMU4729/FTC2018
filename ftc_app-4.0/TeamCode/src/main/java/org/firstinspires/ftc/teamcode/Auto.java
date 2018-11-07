@@ -41,15 +41,18 @@ public class Auto extends OpMode
 {
     private Motors motors;
     private ElapsedTime runtime = new ElapsedTime();
+    private Grabber grabber;
     private Navigation navigation;
     private Tracking tracking;
+
     private static final double ROBOT_FIELD = 358.14; //cm
     private static final double ROBOT_FIELD_HALF = 179.07; //cm
+    private double squareWidth = 596.9; //mm
 
-    private final double[][] blueTop = {{}, {}};
-    private final double[][] blueBottom = {{}, {}};
-    private final double[][] redTop = {{}, {}};
-    private final double[][] redBottom = {{}, {}};
+    private final double[][] blueTop = {{squareWidth*0.5, squareWidth*2.5}, {squareWidth*0.5, squareWidth*5.5}};
+    private final double[][] blueBottom = {{squareWidth*2.5, squareWidth*5.5}, {squareWidth*0.5, squareWidth*5.5}};
+    private final double[][] redTop = {{squareWidth*3.5, squareWidth*0.5}, {squareWidth*5.5, squareWidth*0.5}};
+    private final double[][] redBottom = {{squareWidth*5.5, squareWidth*3.5}, {squareWidth*5.5, squareWidth*0.5}};
     private double[][] actualPosition;
 
     private int autoStage = 0;
@@ -63,6 +66,7 @@ public class Auto extends OpMode
     public void init() {
         telemetry.addData("Status", "Auto ready");
         motors = new Motors(hardwareMap);
+        grabber = new Grabber(hardwareMap);
         navigation = new Navigation(hardwareMap);
         actualPosition = blueTop;
         tracking = navigation.tracking;
@@ -100,9 +104,11 @@ public class Auto extends OpMode
 
             motors.arcadeDrive(power, turn);
             if (navigation.getDistance(actualPosition[autoStage][0], actualPosition[autoStage][1]) < distanceThreshold) {
-                stop();
+                stopMotors();
                 autoStage += 1;
             }
+        } else if (autoStage <= actualPosition.length) {
+            grabber.outake();
         }
     }
 
@@ -119,12 +125,13 @@ public class Auto extends OpMode
     }
 
     private void stopMotors() {
-        motors.arcadeDrive(0, 0);
+        motors.arcadeDrive(0,0);
     }
 
     // Code to run ONCE after the driver hits STOP
     @Override
     public void stop() {
-        motors.arcadeDrive(0,0);
+        stopMotors();
+        grabber.stopSpin();
     }
 }
