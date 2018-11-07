@@ -95,12 +95,12 @@ public class DriveCode extends OpMode
 
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        leftPower  = -gamepad1.left_stick_y ;
-        rightPower = -gamepad1.right_stick_y ;
+//        leftPower  = -gamepad1.left_stick_y ;
+//        rightPower = -gamepad1.right_stick_y ;
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+//        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
         trackingTest.run();
         telemetry.addData("vision", trackingTest.vision);
         telemetry.addData("x, y, z, rotation", "%.2f, %.2f, %.2f, %.2f", trackingTest.x, trackingTest.y, trackingTest.z, trackingTest.rotation);
