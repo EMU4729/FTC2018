@@ -60,9 +60,9 @@ public class Navigation {
 
         if (angleDifference(angle, tracking.rotation) < 1) {
             move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;
-        } else if (angleDifference(angle, tracking.rotation) < 45) {
-            move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;
-            turn = Math.min(angleScalingThreshold, Math.abs(angle)) / angleScalingThreshold * Math.signum(angle);
+//        } else if (angleDifference(angle, tracking.rotation) < 45) {
+//            move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;
+//            turn = Math.min(angleScalingThreshold, Math.abs(angle)) / angleScalingThreshold * Math.signum(angle);
         } else {
             turn = Math.min(angleScalingThreshold, Math.abs(angle)) / angleScalingThreshold * Math.signum(angle);
         }
