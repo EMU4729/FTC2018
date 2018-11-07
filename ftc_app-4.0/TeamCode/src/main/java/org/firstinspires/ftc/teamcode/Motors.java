@@ -13,11 +13,11 @@ public class Motors {
 
     public Motors(HardwareMap hardwareMap) {
 //        Log.i("class", DcMotor.class.getName());
-        leftDrive  = null;//hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = null;//hardwareMap.get(DcMotor.class, "right_drive");
+        hardwareMap.get(DcMotor.class, "left_drive");
+        hardwareMap.get(DcMotor.class, "right_drive");
 
-        //leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        //rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void arcadeDrive(double forwards, double turn) {
@@ -27,7 +27,7 @@ public class Motors {
         leftPower = Range.clip(forwards + turn, -1.0, 1.0);
         rightPower = Range.clip(forwards - turn, -1.0, 1.0);
 
-        // leftDrive.setPower(leftPower);
-        // rightDrive.setPower(rightPower);
+         leftDrive.setPower(leftPower);
+         rightDrive.setPower(rightPower);
     }
 }

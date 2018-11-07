@@ -221,10 +221,13 @@ public class Tracking implements SensorEventListener {
 
     public void run() {
         double delta = 0;
+        Log.i("lastRun", Long.toString(lastRun));
         if (lastRun != 0) {
             delta = (System.currentTimeMillis() - lastRun) / 1000;
         }
         lastRun = System.currentTimeMillis();
+
+        Log.i("delta", Double.toString(delta));
 
         // check all the trackable target to see which one (if any) is visible.
         targetVisible = false;
@@ -280,9 +283,9 @@ public class Tracking implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        Log.i("data", Float.toString(sensorEvent.values[0]));
+//        Log.i("data", Boolean.toString(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER));
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            ax = sensorEvent.val    ues[0];
+            ax = sensorEvent.values[0];
             ay = sensorEvent.values[1];
             az = sensorEvent.values[2];
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {

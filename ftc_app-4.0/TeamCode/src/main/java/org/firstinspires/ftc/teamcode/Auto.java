@@ -69,6 +69,7 @@ public class Auto extends OpMode
         grabber = new Grabber(hardwareMap);
         navigation = new Navigation(hardwareMap);
         actualPosition = blueTop;
+        navigation.init();
         tracking = navigation.tracking;
     }
 
@@ -77,7 +78,7 @@ public class Auto extends OpMode
      */
     @Override
     public void init_loop() {
-        //leds
+
     }
 
     //Code to run ONCE when the driver hits PLAY
@@ -91,6 +92,7 @@ public class Auto extends OpMode
     //Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
+        navigation.run();
         telemetry.addData("X", tracking.x);
         telemetry.addData("Y", tracking.y);
         telemetry.addData("Z", tracking.z);
