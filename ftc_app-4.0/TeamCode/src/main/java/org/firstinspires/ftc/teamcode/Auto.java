@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Auto", group="Iterative Opmode")
@@ -80,7 +81,7 @@ public class Auto extends OpMode
     public void start() {
         runtime.reset();
 
-        release(); //release from wall
+//        release(); //release from wall
     }
 
     //Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP

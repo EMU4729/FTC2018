@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -77,9 +78,13 @@ public class Tracking implements SensorEventListener {
          */
         lastRun = 0;
 
+        if (sensorManager == null) Log.i("hardwareMap", "is null");
+
         sensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, gyroscope, 1000);
+        sensorManager.registerListener(this, accelerometer, 1000);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -275,8 +280,9 @@ public class Tracking implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        Log.i("data", Float.toString(sensorEvent.values[0]));
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            ax = sensorEvent.values[0];
+            ax = sensorEvent.val    ues[0];
             ay = sensorEvent.values[1];
             az = sensorEvent.values[2];
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {

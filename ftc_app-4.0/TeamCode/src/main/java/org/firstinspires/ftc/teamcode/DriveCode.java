@@ -60,17 +60,14 @@ public class DriveCode extends OpMode
 //    private DcMotor leftDrive = null;
 //    private DcMotor rightDrive = null;
 
-    public DriveCode() {
-        motors = new Motors(hardwareMap);
-        trackingTest = new Tracking(hardwareMap);
-    }
-
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         telemetry.addData("Status", "Tele ready");
+        motors = new Motors(hardwareMap);
+        trackingTest = new Tracking(hardwareMap);
         trackingTest.init();
     }
 
@@ -104,8 +101,9 @@ public class DriveCode extends OpMode
         // Show the elapsed game time and wheel power.
 //        telemetry.addData("Status", "Run Time: " + runtime.toString());
         //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        trackingTest.run();
         telemetry.addData("vision", trackingTest.vision);
-        telemetry.addData("x, y, z, rotation", "%.2f, %.2f, %.2f, %.2f", trackingTest.x, trackingTest.y, trackingTest.z);
+        telemetry.addData("x, y, z, rotation", "%.2f, %.2f, %.2f, %.2f", trackingTest.x, trackingTest.y, trackingTest.z, trackingTest.rotation);
 
         motors.arcadeDrive(drive, turn);
     }
