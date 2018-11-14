@@ -33,8 +33,9 @@ public class Tracking implements SensorEventListener {
     public double x, y, z;
     public double rotation;
 
-    private double ax, ay, az;
-    private double vx, vy, vz;
+    public double ax, ay, az;
+    public double vx, vy, vz;
+    public double gx, gy, gz;
     private double vrotation;
     private long lastRun;
 
@@ -42,6 +43,7 @@ public class Tracking implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor gyroscope;
     private Sensor accelerometer;
+    private Sensor gravity;
 
     private static final String VUFORIA_KEY = "ARKIRg7/////AAAAGQU31t4eREUutEXqid10CmISe2JaYj59any+VkpRNVDhEWqhqx24jAo1sGqISNJQ+DWoxr8B/GduQTg7NTispAEJR+R/ltkkGkYNJqSLJb4S51xBprMyZ7f5IiwFs/c/AYaphIQb0UoCVK6AIpv69VsDIwCeIaZCUQB4XEY/tdkQh5CDRZxNoP+TAYfv7EbeAGmZsdqFg5DciG2U6cwRD+0gkUzmeYSkGd4/FXqVxicAYL0zRryzoVlOIBLLRF6pxgMScC6n1/OoMjBYrMcM2yKwJhvTvD/nlUwCe7acRA/hXMsvhNZMls8ZDokSuHKISudTQ5bEH6c+q+GsH7NwoUsYgASQ+6aXlL9IRWpcYd7u\n";
 
@@ -83,8 +85,10 @@ public class Tracking implements SensorEventListener {
         sensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         sensorManager.registerListener(this, gyroscope, 1000);
         sensorManager.registerListener(this, accelerometer, 1000);
+        sensorManager.registerListener(this, gravity, 1000);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -229,12 +233,12 @@ public class Tracking implements SensorEventListener {
         // check all the trackable target to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
-            if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+            if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
                 targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
                 // the last time that call was made, or if the trackable is not currently visible.
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {
                     lastLocation = robotLocationTransform;
                 }
@@ -242,18 +246,11 @@ public class Tracking implements SensorEventListener {
             }
         }
 
-        double gx = alpha * gravity[0] + (1 - alpha) * event.values[0];
-        double gy = alpha * gravity[1] + (1 - alpha) * event.values[1];
-        double gz = alpha * gravity[2] + (1 - alpha) * event.values[2];
-
-        linear_acceleration[0] = event.values[0] - gravity[0];
-        linear_acceleration[1] = event.values[1] - gravity[1];
-        linear_acceleration[2] = event.values[2] - gravity[2];
-
         // Update velocity anyway
-        vx += ax * delta;
-        vy += ay * delta;
-        vz += az * delta;
+
+        vx += (ax - gx) * delta;
+        vy += (ay - gy) * delta;
+        vz += (az - gz) * delta;
 
         // Provide feedback as to where the robot is located (if we know).
         if (targetVisible) {
@@ -297,6 +294,10 @@ public class Tracking implements SensorEventListener {
             az = sensorEvent.values[2];
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             vrotation = sensorEvent.values[2];
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GRAVITY) {
+            gx = sensorEvent.values[0];
+            gy = sensorEvent.values[1];
+            gz = sensorEvent.values[2];
         }
     }
 
