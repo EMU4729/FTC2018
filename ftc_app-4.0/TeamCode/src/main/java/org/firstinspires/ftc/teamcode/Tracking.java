@@ -221,13 +221,10 @@ public class Tracking implements SensorEventListener {
 
     public void run() {
         double delta = 0;
-        Log.i("lastRun", Long.toString(lastRun));
         if (lastRun != 0) {
-            delta = (System.currentTimeMillis() - lastRun) / 1000;
+            delta = (double) (System.nanoTime() - lastRun) / 1000000000;
         }
-        lastRun = System.currentTimeMillis();
-
-        Log.i("delta", Double.toString(delta));
+        lastRun = System.nanoTime();
 
         // check all the trackable target to see which one (if any) is visible.
         targetVisible = false;
@@ -244,6 +241,14 @@ public class Tracking implements SensorEventListener {
                 break;
             }
         }
+
+        double gx = alpha * gravity[0] + (1 - alpha) * event.values[0];
+        double gy = alpha * gravity[1] + (1 - alpha) * event.values[1];
+        double gz = alpha * gravity[2] + (1 - alpha) * event.values[2];
+
+        linear_acceleration[0] = event.values[0] - gravity[0];
+        linear_acceleration[1] = event.values[1] - gravity[1];
+        linear_acceleration[2] = event.values[2] - gravity[2];
 
         // Update velocity anyway
         vx += ax * delta;
@@ -275,9 +280,11 @@ public class Tracking implements SensorEventListener {
                 rotation -= 360;
             }
 
-            x  += vx * delta * Math.cos(Math.toRadians(rotation)) - vy * delta * Math.sin(Math.toRadians(rotation));
-            y  += vy * delta * Math.cos(Math.toRadians(rotation)) + vx * delta * Math.cos(Math.toRadians(rotation));
-            z  += vz * delta;
+            double theta = -rotation + 90;
+
+            x += vx * delta * Math.sin(Math.toRadians(theta)) + vy * delta * Math.cos(Math.toRadians(theta));
+            y += -(-vx * delta * Math.cos(Math.toRadians(theta)) + vy * delta * Math.sin(Math.toRadians(theta)));
+            z += vz * delta;
         }
     }
 

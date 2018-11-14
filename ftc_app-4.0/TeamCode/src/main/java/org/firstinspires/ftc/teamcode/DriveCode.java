@@ -99,7 +99,7 @@ public class DriveCode extends OpMode
 //        rightPower = -gamepad1.right_stick_y ;
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
+//        telemetry.addData("Status", "Run Time: " + runtime.toString());
 //        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
         trackingTest.run();
         telemetry.addData("vision", trackingTest.vision);
