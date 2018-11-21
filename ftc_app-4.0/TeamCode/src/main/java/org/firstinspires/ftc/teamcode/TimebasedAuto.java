@@ -40,6 +40,9 @@ public class TimebasedAuto extends OpMode {
         if (runtime.time() == 15) {
             forward();
         }
+        if (runtime.time() == 24) {
+            //drop thing in lander
+        }
     }
 
     private void forward() {
