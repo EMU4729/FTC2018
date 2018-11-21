@@ -1,3 +1,10 @@
+/**
+ *  This is code just in case vision doesn't work we will use this
+ *  as it is just time-based auto.
+ *
+ *  TimeBasedAuto.java
+ **/
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -39,6 +46,9 @@ public class TimebasedAuto extends OpMode {
         }
         if (runtime.time() == 15) {
             forward();
+        }
+        if (runtime.time() == 24) {
+            //drop thing in lander
         }
     }
 

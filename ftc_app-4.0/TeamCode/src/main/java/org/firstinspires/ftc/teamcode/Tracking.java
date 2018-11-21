@@ -120,26 +120,6 @@ public class Tracking implements SensorEventListener {
         allTrackables.addAll(targetsRoverRuckus);
 
         /**
-         * In order for localization to work, we need to tell the system where each target is on the field, and
-         * where the phone resides on the robot.  These specifications are in the form of <em>transformation matrices.</em>
-         * Transformation matrices are a central, important concept in the math here involved in localization.
-         * See <a href="https://en.wikipedia.org/wiki/Transformation_matrix">Transformation Matrix</a>
-         * for detailed information. Commonly, you'll encounter transformation matrices as instances
-         * of the {@link OpenGLMatrix} class.
-         *
-         * If you are standing in the Red Alliance Station looking towards the center of the field,
-         *     - The X axis runs from your left to the right. (positive from the center to the right)
-         *     - The Y axis runs from the Red Alliance Station towards the other side of the field
-         *       where the Blue Alliance Station is. (Positive is from the center, towards the BlueAlliance station)
-         *     - The Z axis runs from the floor, upwards towards the ceiling.  (Positive is above the floor)
-         *
-         * This Rover Ruckus sample places a specific target in the middle of each perimeter wall.
-         *
-         * Before being transformed, each target image is conceptually located at the origin of the field's
-         *  coordinate system (the center of the field), facing up.
-         */
-
-        /**
          * To place the BlueRover target in the middle of the blue perimeter wall:
          * - First we rotate it 90 around the field's X axis to flip it upright.
          * - Then, we translate it along the Y axis to the blue perimeter wall.
@@ -207,7 +187,6 @@ public class Tracking implements SensorEventListener {
          * Next, translate the camera lens to where it is on the robot.
          * In this example, it is centered (left to right), but 110 mm forward of the middle of the robot, and 200 mm above ground level.
          */
-
         final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
         final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
         final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
