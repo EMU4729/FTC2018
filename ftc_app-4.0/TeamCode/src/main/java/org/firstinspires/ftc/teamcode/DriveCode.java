@@ -61,10 +61,14 @@ public class DriveCode extends OpMode
 //        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
         trackingTest.run();
         telemetry.addData("vision", trackingTest.vision);
-        telemetry.addData("x, y, z, rotation", "%.2f, %.2f, %.2f, %.2f", trackingTest.x, trackingTest.y, trackingTest.z, trackingTest.rotation);
-        telemetry.addData("ax, ay, az", "%.2f, %.2f, %.2f", trackingTest.ax, trackingTest.ay, trackingTest.az);
-        telemetry.addData("vx, vy, vz", "%.2f, %.2f, %.2f", trackingTest.vx, trackingTest.vy, trackingTest.vz);
-        telemetry.addData("gx, gy, gz", "%.2f, %.2f, %.2f", trackingTest.gx, trackingTest.gy, trackingTest.gz);
+        telemetry.addData("x, y, z, rotation", "%.2f, %.2f, %.2f, %.2f",
+                trackingTest.x, trackingTest.y, trackingTest.z, trackingTest.rotation);
+        telemetry.addData("ax, ay, az", "%.2f, %.2f, %.2f",
+                trackingTest.ax, trackingTest.ay, trackingTest.az);
+        telemetry.addData("vx, vy, vz", "%.2f, %.2f, %.2f",
+                trackingTest.vx, trackingTest.vy, trackingTest.vz);
+        telemetry.addData("gx, gy, gz", "%.2f, %.2f, %.2f",
+                trackingTest.gx, trackingTest.gy, trackingTest.gz);
 
         motors.arcadeDrive(drive, turn);
     }
