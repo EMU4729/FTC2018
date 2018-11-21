@@ -1,3 +1,10 @@
+/**
+ * This was going to be used but then we decided as a team that their wasn't enough time
+ * to build it.
+ *
+ * Climber.java
+ **/
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;

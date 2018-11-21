@@ -1,3 +1,10 @@
+/**
+ *  This is code just in case vision doesn't work we will use this
+ *  as it is just time-based auto.
+ *
+ *  TimeBasedAuto.java
+ **/
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

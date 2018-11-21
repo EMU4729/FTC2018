@@ -1,3 +1,7 @@
+/**
+ * This is used for grabbing the minerals and placing them
+ **/
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
