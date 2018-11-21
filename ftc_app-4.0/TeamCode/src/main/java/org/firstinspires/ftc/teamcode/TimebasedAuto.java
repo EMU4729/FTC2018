@@ -15,13 +15,16 @@ public class TimebasedAuto extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Grabber grabber;
 
-    private static final double START = 5;
-    private static final double GET_READY_TO_TURN = 10;
-    private static final double GOING_TOWARDS_DEPOT = 15;
-    private static final double DROPPING_THING = 24;
+    protected static double START = 5;
+    protected static double GET_READY_TO_TURN = 10;
+    protected static double GOING_TOWARDS_DEPOT = 15;
+    protected static double DROPPING_THING = 24;
 
+    boolean isLeft;
 
-
+    public TimebasedAuto() {
+        isLeft = false;
+    }
 
     @Override
     public void init() {
@@ -45,7 +48,11 @@ public class TimebasedAuto extends OpMode {
         if (runtime.time() <= START) {
             forward();
         } else if (runtime.time() <= GET_READY_TO_TURN){
-            turnLeft();
+            if (isLeft == true){
+                turnLeft();
+            } else {
+                turnRight();
+            }
         } else if (runtime.time() <= GOING_TOWARDS_DEPOT) {
             forward();
         } else if (runtime.time() <= DROPPING_THING) {
