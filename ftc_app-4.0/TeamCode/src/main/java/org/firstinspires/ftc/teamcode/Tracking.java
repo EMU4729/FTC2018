@@ -39,6 +39,8 @@ public class Tracking implements SensorEventListener {
     private double vrotation;
     private long lastRun;
 
+    private double accelerationThreshold = 0.6;
+
     private HardwareMap hardwareMap;
     private SensorManager sensorManager;
     private Sensor gyroscope;
@@ -248,9 +250,13 @@ public class Tracking implements SensorEventListener {
 
         // Update velocity anyway
 
-        vx += (ax - gx) * delta;
-        vy += (ay - gy) * delta;
-        vz += (az - gz) * delta;
+        double fx = ax - gx;
+        double fy = ay - gy;
+        double fz = az - gz;
+
+        if (Math.abs(fx) > accelerationThreshold) vx += fx * delta;
+        if (Math.abs(fy) > accelerationThreshold) vy += fy * delta;
+        if (Math.abs(fz) > accelerationThreshold) vz += fz * delta;
 
         // Provide feedback as to where the robot is located (if we know).
         if (targetVisible) {
