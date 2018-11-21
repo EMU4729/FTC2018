@@ -40,15 +40,15 @@ public class TimebasedAuto extends OpMode {
 
     @Override
     public void loop() {
-        forward();
-        if (runtime.time() == 10){
-            turnLeft();
-        }
-        if (runtime.time() == 15) {
+        if (runtime.time() <= 5) {
             forward();
-        }
-        if (runtime.time() == 24) {
-            //drop thing in lander
+        } else if (runtime.time() <= 10){
+            turnLeft();
+        } else if (runtime.time() <= 15) {
+            forward();
+        } else if (runtime.time() <= 24) {
+            stop();
+            //drop thing in depot
         }
     }
 
