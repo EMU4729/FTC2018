@@ -15,11 +15,13 @@ public class TimebasedAuto extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Grabber grabber;
 
-    private static final double ROBOT_FIELD = 358.14; //cm
-    private static final double ROBOT_FIELD_HALF = 179.07; //cm
-    private double squareWidth = 596.9; //mm
+    private static final double START = 5;
+    private static final double GET_READY_TO_TURN = 10;
+    private static final double GOING_TOWARDS_DEPOT = 15;
+    private static final double DROPPING_THING = 24;
 
-    private final double distanceThreshold = 100; //mm
+
+
 
     @Override
     public void init() {
@@ -40,13 +42,13 @@ public class TimebasedAuto extends OpMode {
 
     @Override
     public void loop() {
-        if (runtime.time() <= 5) {
+        if (runtime.time() <= START) {
             forward();
-        } else if (runtime.time() <= 10){
+        } else if (runtime.time() <= GET_READY_TO_TURN){
             turnLeft();
-        } else if (runtime.time() <= 15) {
+        } else if (runtime.time() <= GOING_TOWARDS_DEPOT) {
             forward();
-        } else if (runtime.time() <= 24) {
+        } else if (runtime.time() <= DROPPING_THING) {
             stop();
             //drop thing in depot
         }
