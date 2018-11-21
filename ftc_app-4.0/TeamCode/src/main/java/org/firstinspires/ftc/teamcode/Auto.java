@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Auto", group="Iterative Opmode")
-@Disabled
 public class Auto extends OpMode
 {
     private Motors motors;
@@ -16,8 +15,8 @@ public class Auto extends OpMode
     private Navigation navigation;
     private Tracking tracking;
 
-    private static final double ROBOT_FIELD = 358.14; //cm
-    private static final double ROBOT_FIELD_HALF = 179.07; //cm
+    private static final double ROBOT_FIELD = 365.76; //cm
+    private static final double ROBOT_FIELD_HALF = ROBOT_FIELD / 2; //cm
     private double squareWidth = 596.9; //mm
 
     private final double[][] blueTop = {{squareWidth*0.5, squareWidth*2.5}, {squareWidth*0.5, squareWidth*5.5}};
@@ -38,7 +37,7 @@ public class Auto extends OpMode
         telemetry.addData("Status", "Auto ready");
         motors = new Motors(hardwareMap);
         grabber = new Grabber(hardwareMap);
-        navigation = new Navigation(hardwareMap);
+        navigation = new Navigation(hardwareMap, motors);
         actualPosition = blueTop;
         navigation.init();
         tracking = navigation.tracking;
@@ -69,11 +68,16 @@ public class Auto extends OpMode
         telemetry.addData("Z", tracking.z);
         telemetry.addData("Rotation", tracking.rotation);
 
+        telemetry.addData("AutoStage", autoStage);
+
         //go to box
         if (autoStage < actualPosition.length) {
             double[] output = navigation.navigate(actualPosition[autoStage][0], actualPosition[autoStage][1]);
             double power = output[0];
             double turn = output[1];
+
+            telemetry.addData("Power", power);
+            telemetry.addData("Turn", turn);
 
             motors.arcadeDrive(power, turn);
             if (navigation.getDistance(actualPosition[autoStage][0], actualPosition[autoStage][1]) < distanceThreshold) {

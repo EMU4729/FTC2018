@@ -5,13 +5,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Navigation {
     public Tracking tracking;
     private HardwareMap hardwareMap;
+    private Motors motors;
 
-    public Navigation(HardwareMap hardwareMap) {
+    public Navigation(HardwareMap hardwareMap, Motors motors) {
         this.hardwareMap = hardwareMap;
+        this.motors = motors;
     }
 
     public void init() {
-        tracking = new Tracking(hardwareMap);
+        tracking = new Tracking(hardwareMap, motors);
         tracking.init();
     }
 
@@ -29,7 +31,7 @@ public class Navigation {
         double distance = getDistance(x, y);
         double angle = Math.toDegrees(Math.atan2(x, y));
 
-        if (angleDifference(angle, tracking.rotation) < 1) {
+        if (angleDifference(angle, tracking.rotation) < 10) {
             move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;
 //        } else if (angleDifference(angle, tracking.rotation) < 45) {
 //            move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;

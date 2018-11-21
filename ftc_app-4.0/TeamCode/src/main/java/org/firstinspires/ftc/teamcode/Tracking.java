@@ -33,15 +33,13 @@ public class Tracking implements SensorEventListener {
     public double x, y, z;
     public double rotation;
 
-    public double ax, ay, az;
-    public double vx, vy, vz;
-    public double gx, gy, gz;
-    private double vrotation;
+    public double vy, vr;
     private long lastRun;
 
-    private double accelerationThreshold = 0.6;
+    private double powerToVelocity = 1000;
 
     private HardwareMap hardwareMap;
+    private Motors motors;
     private SensorManager sensorManager;
     private Sensor gyroscope;
     private Sensor accelerometer;
@@ -70,8 +68,9 @@ public class Tracking implements SensorEventListener {
      */
     private VuforiaLocalizer vuforia;
 
-    public Tracking(HardwareMap hardwareMap) {
+    public Tracking(HardwareMap hardwareMap, Motors motors) {
         this.hardwareMap = hardwareMap;
+        this.motors = motors;
     }
 
     public void init() {
@@ -227,16 +226,6 @@ public class Tracking implements SensorEventListener {
             }
         }
 
-        // Update velocity anyway
-
-        double fx = ax - gx;
-        double fy = ay - gy;
-        double fz = az - gz;
-
-        if (Math.abs(fx) > accelerationThreshold) vx += fx * delta;
-        if (Math.abs(fy) > accelerationThreshold) vy += fy * delta;
-        if (Math.abs(fz) > accelerationThreshold) vz += fz * delta;
-
         // Provide feedback as to where the robot is located (if we know).
         if (targetVisible) {
             vision = true;
@@ -244,45 +233,39 @@ public class Tracking implements SensorEventListener {
             VectorF translation = lastLocation.getTranslation();
 //                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
 //                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
-            x = translation.get(0) / mmPerInch;
-            y = translation.get(1) / mmPerInch;
-            z = translation.get(2) / mmPerInch;
+            y = translation.get(0) * -1;
+            x = translation.get(1) * -1;
+            z = translation.get(2);
+            x += mmFTCFieldWidth;
+            y += mmFTCFieldWidth;
 
             // express the rotation of the robot in degrees.
             Orientation rot = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             // telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-            rotation = rot.thirdAngle;
+            rotation = -rot.thirdAngle;
         } else {
             vision = false;
             // telemetry.addData("Visible Target", "none");
             // Fall back to motion tracking
 
-            rotation += Math.toDegrees(vrotation * delta);
+            rotation += Math.toDegrees(vr * delta);
             if (rotation > 360) {
                 rotation -= 360;
             }
 
             double theta = -rotation + 90;
+            vy = (motors.leftPower + motors.rightPower) * powerToVelocity;
 
-            x += vx * delta * Math.sin(Math.toRadians(theta)) + vy * delta * Math.cos(Math.toRadians(theta));
-            y += -(-vx * delta * Math.cos(Math.toRadians(theta)) + vy * delta * Math.sin(Math.toRadians(theta)));
-            z += vz * delta;
+            x += vy * delta * Math.cos(Math.toRadians(theta));
+            y += -(vy * delta * Math.sin(Math.toRadians(theta)));
         }
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 //        Log.i("data", Boolean.toString(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER));
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            ax = sensorEvent.values[0];
-            ay = sensorEvent.values[1];
-            az = sensorEvent.values[2];
-        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            vrotation = sensorEvent.values[2];
-        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GRAVITY) {
-            gx = sensorEvent.values[0];
-            gy = sensorEvent.values[1];
-            gz = sensorEvent.values[2];
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            vr = sensorEvent.values[1];
         }
     }
 
