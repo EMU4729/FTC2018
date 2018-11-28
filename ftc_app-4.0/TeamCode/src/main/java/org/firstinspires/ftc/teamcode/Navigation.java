@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Navigation {
@@ -26,18 +28,21 @@ public class Navigation {
         double turn = 0;
 
         final double speedScalingThreshold = 1000;
-        final double angleScalingThreshold = 10;
+        final double angleScalingThreshold = 45;
+        final double moveForwardThreshold = 10;
 
         double distance = getDistance(x, y);
-        double angle = Math.toDegrees(Math.atan2(x, y));
+        double angle = -Math.toDegrees(Math.atan2(-(y-tracking.y), x-tracking.x)) + 90;
+        double distanceAngle = angleDifference(angle, tracking.rotation);
 
-        if (angleDifference(angle, tracking.rotation) < 10) {
+        if (Math.abs(distanceAngle) < moveForwardThreshold) {
             move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;
-//        } else if (angleDifference(angle, tracking.rotation) < 45) {
-//            move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;
-//            turn = Math.min(angleScalingThreshold, Math.abs(angle)) / angleScalingThreshold * Math.signum(angle);
         } else {
-            turn = Math.min(angleScalingThreshold, Math.abs(angle)) / angleScalingThreshold * Math.signum(angle);
+            if (Math.abs(distanceAngle) > angleScalingThreshold) {
+                turn = Math.signum(distanceAngle);
+            } else {
+                turn = distanceAngle / angleScalingThreshold;
+            }
         }
 
         double[] result = {move, turn};
@@ -45,14 +50,13 @@ public class Navigation {
     }
 
     public double angleDifference(double angle1, double angle2) {
-        if (angle1 > 180) {
-            angle1 -= 360;
-        }
-        if (angle2 > 180) {
-            angle2 -= 360;
-        }
-
-        return Math.abs(angle1 - angle2);
+        if (angle1 > 360) angle1 -= 360;
+        if (angle1 < 0) angle1 += 360;
+        if (angle2 > 360) angle2 -= 360;
+        if (angle2 < 0) angle2 += 360;
+        double difference = angle2 - angle1;
+        if (Math.abs(difference) > 180) difference = (360 - Math.abs(difference)) * Math.signum(-difference);
+        return difference;
     }
 
     public double getDistance(double x, double y) {

@@ -71,6 +71,14 @@ public class Tracking implements SensorEventListener {
     public Tracking(HardwareMap hardwareMap, Motors motors) {
         this.hardwareMap = hardwareMap;
         this.motors = motors;
+
+        vision = false;
+        x = mmFTCFieldWidth;
+        y = mmFTCFieldWidth;
+        z = 0;
+        rotation = 0;
+        vy = 0;
+        vr = 0;
     }
 
     public void init() {
@@ -186,9 +194,9 @@ public class Tracking implements SensorEventListener {
          * Next, translate the camera lens to where it is on the robot.
          * In this example, it is centered (left to right), but 110 mm forward of the middle of the robot, and 200 mm above ground level.
          */
-        final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
+        final int CAMERA_FORWARD_DISPLACEMENT  = 0;//110;   // eg: Camera is 110 mm in front of robot center
+        final int CAMERA_VERTICAL_DISPLACEMENT = 0;//200;   // eg: Camera is 200 mm above ground
+        final int CAMERA_LEFT_DISPLACEMENT     = 0;//110;//0;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
@@ -254,10 +262,12 @@ public class Tracking implements SensorEventListener {
             }
 
             double theta = -rotation + 90;
+//            Log.i("leftPower", Double.toString(motors.leftPower));
+//            Log.i("rightPower", Double.toString(motors.rightPower));
             vy = (motors.leftPower + motors.rightPower) * powerToVelocity;
 
-            x += vy * delta * Math.cos(Math.toRadians(theta));
-            y += -(vy * delta * Math.sin(Math.toRadians(theta)));
+            x -= vy * delta * Math.cos(Math.toRadians(theta));
+            y -= vy * delta * Math.sin(Math.toRadians(theta));
         }
     }
 

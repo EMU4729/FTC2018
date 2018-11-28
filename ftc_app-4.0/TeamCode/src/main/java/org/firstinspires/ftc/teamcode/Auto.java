@@ -15,9 +15,9 @@ public class Auto extends OpMode
     private Navigation navigation;
     private Tracking tracking;
 
-    private static final double ROBOT_FIELD = 365.76; //cm
-    private static final double ROBOT_FIELD_HALF = ROBOT_FIELD / 2; //cm
-    private double squareWidth = 596.9; //mm
+    private static final double ROBOT_FIELD = 3657.6; //mm
+    private static final double ROBOT_FIELD_HALF = ROBOT_FIELD / 2; //mm
+    private double squareWidth = ROBOT_FIELD / 6;//596.9; //mm
 
     private final double[][] blueTop = {{squareWidth*0.5, squareWidth*2.5}, {squareWidth*0.5, squareWidth*5.5}};
     private final double[][] blueBottom = {{squareWidth*2.5, squareWidth*5.5}, {squareWidth*0.5, squareWidth*5.5}};
