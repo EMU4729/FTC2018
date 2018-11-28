@@ -43,6 +43,8 @@ public class TimebasedAuto extends OpMode {
         runtime.startTime();
     }
 
+    //the function loop() is code which is for auto when
+    //navigation code is not working
     @Override
     public void loop() {
         if (runtime.time() <= START) {
@@ -58,6 +60,7 @@ public class TimebasedAuto extends OpMode {
         } else if (runtime.time() <= DROPPING_THING) {
             stop();
             //drop thing in depot
+            grabber.outake();
         }
     }
 

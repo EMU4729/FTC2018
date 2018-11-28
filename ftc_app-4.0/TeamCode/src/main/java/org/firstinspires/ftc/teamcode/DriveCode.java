@@ -20,6 +20,7 @@ public class DriveCode extends OpMode
 
     /*
      * Code to run ONCE when the driver hits INIT
+     * This is for debugging tracking, luke. go it.
      */
     @Override
     public void init() {
@@ -53,27 +54,26 @@ public class DriveCode extends OpMode
 
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
-//        leftPower  = -gamepad1.left_stick_y ;
-//        rightPower = -gamepad1.right_stick_y ;
+        leftPower  = -gamepad1.left_stick_y ;
+        rightPower = -gamepad1.right_stick_y ;
 
         // Show the elapsed game time and wheel power.
-//        telemetry.addData("Status", "Run Time: " + runtime.toString());
-//        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-        trackingTest.run();
-        telemetry.addData("vision", trackingTest.vision);
-<<<<<<< HEAD
-        telemetry.addData("x, y, z, rotation", "%.2f, %.2f, %.2f, %.2f", trackingTest.x, trackingTest.y, trackingTest.z, trackingTest.rotation);
-        telemetry.addData("vy", "%.2f", trackingTest.vy);
-=======
-        telemetry.addData("x, y, z, rotation", "%.2f, %.2f, %.2f, %.2f",
-                trackingTest.x, trackingTest.y, trackingTest.z, trackingTest.rotation);
-        telemetry.addData("ax, ay, az", "%.2f, %.2f, %.2f",
-                trackingTest.ax, trackingTest.ay, trackingTest.az);
-        telemetry.addData("vx, vy, vz", "%.2f, %.2f, %.2f",
-                trackingTest.vx, trackingTest.vy, trackingTest.vz);
-        telemetry.addData("gx, gy, gz", "%.2f, %.2f, %.2f",
-                trackingTest.gx, trackingTest.gy, trackingTest.gz);
->>>>>>> 825f2d1e119b00cd57e6478153edcb87a0f18123
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+
+        //Luke's tracking test
+//        trackingTest.run();
+//        telemetry.addData("vision", trackingTest.vision);
+//        telemetry.addData("x, y, z, rotation", "%.2f, %.2f, %.2f, %.2f", trackingTest.x, trackingTest.y, trackingTest.z, trackingTest.rotation);
+//        telemetry.addData("vy", "%.2f", trackingTest.vy);
+//        telemetry.addData("x, y, z, rotation", "%.2f, %.2f, %.2f, %.2f",
+//                trackingTest.x, trackingTest.y, trackingTest.z, trackingTest.rotation);
+//        telemetry.addData("ax, ay, az", "%.2f, %.2f, %.2f",
+//                trackingTest.ax, trackingTest.ay, trackingTest.az);
+//        telemetry.addData("vx, vy, vz", "%.2f, %.2f, %.2f",
+//                trackingTest.vx, trackingTest.vy, trackingTest.vz);
+//        telemetry.addData("gx, gy, gz", "%.2f, %.2f, %.2f",
+//                trackingTest.gx, trackingTest.gy, trackingTest.gz);
 
         motors.arcadeDrive(drive, turn);
     }
