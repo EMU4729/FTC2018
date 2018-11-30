@@ -256,26 +256,23 @@ public class Tracking implements SensorEventListener {
             // telemetry.addData("Visible Target", "none");
             // Fall back to motion tracking
 
-            rotation += Math.toDegrees(vr * delta);
+            rotation -= Math.toDegrees(vr * delta);
             if (rotation > 360) {
                 rotation -= 360;
             }
 
             double theta = -rotation + 90;
-//            Log.i("leftPower", Double.toString(motors.leftPower));
-//            Log.i("rightPower", Double.toString(motors.rightPower));
             vy = (motors.leftPower + motors.rightPower) * powerToVelocity;
 
-            x -= vy * delta * Math.cos(Math.toRadians(theta));
+            x += vy * delta * Math.cos(Math.toRadians(theta));
             y -= vy * delta * Math.sin(Math.toRadians(theta));
         }
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-//        Log.i("data", Boolean.toString(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER));
         if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            vr = sensorEvent.values[1];
+            vr = sensorEvent.values[2];
         }
     }
 

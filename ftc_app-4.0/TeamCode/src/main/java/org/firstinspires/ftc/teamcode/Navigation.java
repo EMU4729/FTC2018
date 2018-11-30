@@ -23,48 +23,53 @@ public class Navigation {
         tracking.run();
     }
 
-    public double[] navigate(double x, double y) {
-        double move = 0;
+    public double[] go(double x, double y) {
+        double power = 0;
         double turn = 0;
 
-        final double speedScalingThreshold = 1000;
-        final double angleScalingThreshold = 45;
-        final double moveForwardThreshold = 10;
+        final double angleMoveThreshold = 10; // Angle difference between current and target at which move begins
+        final double speedScalingThreshold = 1000; // Distance to target at which move starts slowing down
+        final double angleScalingThreshold = 45; // Angle difference between current and target at which turn starts slowing down
 
-        double distance = getDistance(x, y);
+        double distance = distanceTo(x, y);
         double angle = -Math.toDegrees(Math.atan2(-(y-tracking.y), x-tracking.x)) + 90;
-        double distanceAngle = angleDifference(angle, tracking.rotation);
+        double angleDifference = calculateAngleDifference(angle, tracking.rotation);
 
-        if (Math.abs(distanceAngle) < moveForwardThreshold) {
-            move = Math.min(speedScalingThreshold, distance) / speedScalingThreshold;
-        } else {
-            if (Math.abs(distanceAngle) > angleScalingThreshold) {
-                turn = Math.signum(distanceAngle);
+        if (Math.abs(angleDifference) < angleMoveThreshold) {
+            if (distance > speedScalingThreshold) {
+                power = Math.signum(distance);
             } else {
-                turn = distanceAngle / angleScalingThreshold;
+                power = distance / speedScalingThreshold;
             }
         }
 
-        double[] result = {move, turn};
+        if (Math.abs(angleDifference) > angleScalingThreshold) {
+            turn = Math.signum(angleDifference);
+        } else {
+            turn = angleDifference / angleScalingThreshold;
+        }
+
+        motors.arcadeDrive(power, turn);
+
+        double[] result = {power, turn};
         return result;
     }
 
-    public double angleDifference(double angle1, double angle2) {
+    public void stop() {
+        motors.arcadeDrive(0, 0);
+    }
+
+    public double distanceTo(double x, double y) {
+        return Math.sqrt(Math.pow(x - tracking.x, 2) + Math.pow(y - tracking.y, 2));
+    }
+
+    private double calculateAngleDifference(double angle1, double angle2) {
         if (angle1 > 360) angle1 -= 360;
         if (angle1 < 0) angle1 += 360;
         if (angle2 > 360) angle2 -= 360;
         if (angle2 < 0) angle2 += 360;
         double difference = angle2 - angle1;
         if (Math.abs(difference) > 180) difference = (360 - Math.abs(difference)) * Math.signum(-difference);
-        return difference;
-    }
-
-    public double getDistance(double x, double y) {
-        double xDistance = x - tracking.x;
-        double yDistance = y - tracking.y;
-
-        double distance = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
-
-        return distance;
+        return -difference;
     }
 }

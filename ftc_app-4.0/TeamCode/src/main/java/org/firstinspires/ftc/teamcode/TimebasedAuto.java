@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class TimebasedAuto extends OpMode {
     private Motors motors;
     private ElapsedTime runtime = new ElapsedTime();
-    private Grabber grabber;
+    private Mechanism mechanism;
 
     protected static double START = 5;
     protected static double GET_READY_TO_TURN = 10;
@@ -30,7 +30,7 @@ public class TimebasedAuto extends OpMode {
     public void init() {
         telemetry.addData("Status", "Auto ready");
         motors = new Motors(hardwareMap);
-        grabber = new Grabber(hardwareMap);
+        mechanism = new Mechanism(hardwareMap);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class TimebasedAuto extends OpMode {
         } else if (runtime.time() <= DROPPING_THING) {
             stop();
             //drop thing in depot
-            grabber.outake();
+            mechanism.outtake();
         }
     }
 
@@ -83,6 +83,6 @@ public class TimebasedAuto extends OpMode {
     @Override
     public void stop() {
         stopMotors();
-        grabber.stopSpin();
+        mechanism.stopManipulator();
     }
 }
