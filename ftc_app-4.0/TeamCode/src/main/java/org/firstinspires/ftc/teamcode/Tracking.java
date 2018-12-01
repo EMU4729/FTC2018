@@ -272,7 +272,7 @@ public class Tracking implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            vr = sensorEvent.values[2];
+            vr = sensorEvent.values[1];
         }
     }
 

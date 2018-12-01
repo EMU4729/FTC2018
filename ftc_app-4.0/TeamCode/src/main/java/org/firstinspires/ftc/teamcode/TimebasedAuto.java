@@ -60,7 +60,7 @@ public class TimebasedAuto extends OpMode {
         } else if (runtime.time() <= DROPPING_THING) {
             stop();
             //drop thing in depot
-            mechanism.outtake();
+            mechanism.manipulatorPower(1);
         }
     }
 
@@ -83,6 +83,6 @@ public class TimebasedAuto extends OpMode {
     @Override
     public void stop() {
         stopMotors();
-        mechanism.stopManipulator();
+        mechanism.manipulatorPower(0);
     }
 }

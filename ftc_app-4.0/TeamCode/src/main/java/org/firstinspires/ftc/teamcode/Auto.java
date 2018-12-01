@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Auto
@@ -13,10 +15,18 @@ public class Auto
     private Navigation navigation;
     private Tracking tracking;
 
+    private ElapsedTime time = new ElapsedTime();
+
     private final double distanceThreshold = 500; // mm
     private static final double ROBOT_FIELD = 3657.6; // mm
     private double squareWidth = ROBOT_FIELD / 6;//596.9; // mm
     private int autoStage = 0;
+
+    private double ARM_TIME = 2000;
+    private double OUTTAKE_TIME = 2000;
+
+    private double ARM_POWER = 0.5;
+    private double ELBOW_POWER = 0.5;
 
     private double[][] path;
     private final double[][][] paths = {
@@ -71,14 +81,22 @@ public class Auto
             if (navigation.distanceTo(path[autoStage][0], path[autoStage][1]) < distanceThreshold) {
                 navigation.stop();
                 autoStage += 1;
+                if (autoStage >= path.length) time.reset();
             }
-        } else if (autoStage <= path.length) {
-            mechanism.outtake();
+        } else if (autoStage >= path.length) {
+            if (time.milliseconds() <= ARM_TIME) {
+                mechanism.armPower(ARM_POWER);
+                mechanism.elbowPower(ELBOW_POWER);
+            } else if (time.milliseconds() <= ARM_TIME + OUTTAKE_TIME) {
+                mechanism.manipulatorPower(1);
+            } else {
+                mechanism.manipulatorPower(0);
+            }
         }
     }
 
     public void stop() {
         navigation.stop();
-        mechanism.stopManipulator();
+        mechanism.manipulatorPower(0);
     }
 }
