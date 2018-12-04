@@ -14,9 +14,9 @@ public class Navigation {
         this.motors = motors;
     }
 
-    public void init() {
+    public void init(double x, double y, double rotation) {
         tracking = new Tracking(hardwareMap, motors);
-        tracking.init();
+        tracking.init(x, y, rotation);
     }
 
     public void run() {

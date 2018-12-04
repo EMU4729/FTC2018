@@ -33,7 +33,7 @@ public class Motors {
         rightPower = Range.clip(forwards - turn, -1.0, 1.0);
 
         //getting it on robot
-        leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower);
+        leftDrive.setPower(-leftPower);
+        rightDrive.setPower(-rightPower);
     }
 }

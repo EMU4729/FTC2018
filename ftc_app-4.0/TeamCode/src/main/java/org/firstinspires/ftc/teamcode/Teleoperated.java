@@ -44,12 +44,12 @@ public class Teleoperated extends OpMode
         double forwards;
         double turn;
         if (twoController) {
-            motors.arcadeDrive(-gamepad1.left_stick_y, gamepad1.right_stick_x);
+            motors.arcadeDrive(map(-gamepad1.left_stick_y), map(gamepad1.right_stick_x));
             mechanism.armPower(map(-gamepad2.left_stick_y));
             mechanism.elbowPower(map(-gamepad2.right_stick_y));
             mechanism.manipulatorPower(digital(gamepad2.y, gamepad2.b));
         } else {
-            motors.arcadeDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x);
+            motors.arcadeDrive(map(-gamepad1.left_stick_y), map(gamepad1.left_stick_x));
             mechanism.armPower(map(-gamepad1.right_stick_y));
             mechanism.elbowPower(digital(gamepad1.x, gamepad1.a));
             mechanism.manipulatorPower(digital(gamepad1.y, gamepad1.b));

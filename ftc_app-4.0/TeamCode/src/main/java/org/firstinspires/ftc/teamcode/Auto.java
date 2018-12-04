@@ -20,7 +20,7 @@ public class Auto
     private final double distanceThreshold = 500; // mm
     private static final double ROBOT_FIELD = 3657.6; // mm
     private double squareWidth = ROBOT_FIELD / 6;//596.9; // mm
-    private int autoStage = 0;
+    private int autoStage = 1;
 
     private double ARM_TIME = 2000;
     private double OUTTAKE_TIME = 2000;
@@ -29,23 +29,34 @@ public class Auto
     private double ELBOW_POWER = 0.5;
 
     private double[][] path;
+    private double[] startRotations = {
+            315,
+            225,
+            45,
+            135
+    };
+
     private final double[][][] paths = {
-            { // blue top
-                {squareWidth * 0.5, squareWidth * 2.5},
-                {squareWidth * 0.5, squareWidth * 5.5}
-            },
-            { // blue bottom
-                {squareWidth * 2.5, squareWidth * 5.5},
-                {squareWidth * 0.5, squareWidth * 5.5}
-            },
-            { // red top
-                {squareWidth * 3.5, squareWidth * 0.5},
-                {squareWidth * 5.5, squareWidth * 0.5}
-            },
-            { // red bottom
-                {squareWidth * 5.5, squareWidth * 3.5},
-                {squareWidth * 5.5, squareWidth * 0.5}
-            }
+        { // blue top
+            {squareWidth * 2.5, squareWidth * 2.5},
+            {squareWidth * 0.5, squareWidth * 2.5},
+            {squareWidth * 0.5, squareWidth * 5.5}
+        },
+        { // blue bottom
+            {squareWidth * 2.5, squareWidth * 3.5},
+            {squareWidth * 1, squareWidth * 5.5},
+            {squareWidth * 1, squareWidth * 5.5}
+        },
+        { // red top
+            {squareWidth * 3.5, squareWidth * 2.5},
+            {squareWidth * 3.5, squareWidth * 1},
+            {squareWidth * 5.5, squareWidth * 1}
+        },
+        { // red bottom
+            {squareWidth * 3.5, squareWidth * 3.5},
+            {squareWidth * 5, squareWidth * 3.5},
+            {squareWidth * 5, squareWidth * 0.5}
+        }
     };
 
     public Auto(HardwareMap hardwareMap, Telemetry telemetry, int startPosition) {
@@ -57,7 +68,7 @@ public class Auto
         mechanism = new Mechanism(hardwareMap);
         navigation = new Navigation(hardwareMap, motors);
         path = paths[startPosition];
-        navigation.init();
+        navigation.init(path[0][0], path[0][1], startRotations[startPosition]);
         tracking = navigation.tracking;
     }
 

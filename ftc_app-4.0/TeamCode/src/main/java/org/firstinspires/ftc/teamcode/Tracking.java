@@ -81,12 +81,16 @@ public class Tracking implements SensorEventListener {
         vr = 0;
     }
 
-    public void init() {
+    public void init(double x, double y, double rotation) {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
+        this.x = x;
+        this.y = y;
+        this.rotation = rotation;
+
         lastRun = 0;
 
         if (sensorManager == null) Log.i("hardwareMap", "is null");
@@ -272,7 +276,7 @@ public class Tracking implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            vr = sensorEvent.values[1];
+            vr = sensorEvent.values[2];
         }
     }
 
